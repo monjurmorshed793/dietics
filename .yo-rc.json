@@ -43,7 +43,16 @@
     "clientThemeVariant": "",
     "enableGradleEnterprise": false,
     "languages": ["en", "fr"],
-    "entities": ["NutritionState", "ActivityLevel", "Patient"],
-    "lastLiquibaseTimestamp": 1633723772000
+    "entities": [
+      "NutritionState",
+      "ActivityLevel",
+      "Patient",
+      "MeasurementType",
+      "BiochemicalTest",
+      "PatientBiochemicalTest",
+      "Supplements",
+      "DietNature"
+    ],
+    "lastLiquibaseTimestamp": 1633729355000
   }
 }

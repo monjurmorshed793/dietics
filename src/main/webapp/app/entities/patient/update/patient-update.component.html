@@ -234,6 +234,44 @@
             </option>
           </select>
         </div>
+
+        <div class="form-group">
+          <label for="field_dietNatures">Diet Natures</label>
+          <select
+            class="form-control"
+            id="field_dietNatures"
+            data-cy="dietNatures"
+            multiple
+            name="dietNatures"
+            formControlName="dietNatures"
+          >
+            <option
+              [ngValue]="getSelectedDietNature(dietNatureOption, editForm.get('dietNatures')!.value)"
+              *ngFor="let dietNatureOption of dietNaturesSharedCollection; trackBy: trackDietNatureById"
+            >
+              {{ dietNatureOption.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="field_supplements">Supplements</label>
+          <select
+            class="form-control"
+            id="field_supplements"
+            data-cy="supplements"
+            multiple
+            name="supplements"
+            formControlName="supplements"
+          >
+            <option
+              [ngValue]="getSelectedSupplements(supplementsOption, editForm.get('supplements')!.value)"
+              *ngFor="let supplementsOption of supplementsSharedCollection; trackBy: trackSupplementsById"
+            >
+              {{ supplementsOption.name }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <div>

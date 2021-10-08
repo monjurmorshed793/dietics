@@ -110,6 +110,20 @@
             <a [routerLink]="['/activity-level', patient.activityLevel?.id, 'view']">{{ patient.activityLevel?.label }}</a>
           </div>
         </dd>
+        <dt><span>Diet Natures</span></dt>
+        <dd>
+          <span *ngFor="let dietNatures of patient.dietNatures; let last = last">
+            <a [routerLink]="['/diet-nature', dietNatures?.id, 'view']">{{ dietNatures.name }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+        <dt><span>Supplements</span></dt>
+        <dd>
+          <span *ngFor="let supplements of patient.supplements; let last = last">
+            <a [routerLink]="['/supplements', supplements?.id, 'view']">{{ supplements.name }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

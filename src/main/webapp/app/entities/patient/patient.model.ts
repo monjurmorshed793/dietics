@@ -1,6 +1,8 @@
 import * as dayjs from 'dayjs';
 import { INutritionState } from 'app/entities/nutrition-state/nutrition-state.model';
 import { IActivityLevel } from 'app/entities/activity-level/activity-level.model';
+import { IDietNature } from 'app/entities/diet-nature/diet-nature.model';
+import { ISupplements } from 'app/entities/supplements/supplements.model';
 import { Gender } from 'app/entities/enumerations/gender.model';
 import { WeightType } from 'app/entities/enumerations/weight-type.model';
 import { HeightMeasureType } from 'app/entities/enumerations/height-measure-type.model';
@@ -31,6 +33,8 @@ export interface IPatient {
   gainLossType?: GainLossType | null;
   nutritionState?: INutritionState | null;
   activityLevel?: IActivityLevel | null;
+  dietNatures?: IDietNature[] | null;
+  supplements?: ISupplements[] | null;
 }
 
 export class Patient implements IPatient {
@@ -58,7 +62,9 @@ export class Patient implements IPatient {
     public gainLossTimeFrame?: number | null,
     public gainLossType?: GainLossType | null,
     public nutritionState?: INutritionState | null,
-    public activityLevel?: IActivityLevel | null
+    public activityLevel?: IActivityLevel | null,
+    public dietNatures?: IDietNature[] | null,
+    public supplements?: ISupplements[] | null
   ) {
     this.recentWeightGainLoss = this.recentWeightGainLoss ?? false;
   }

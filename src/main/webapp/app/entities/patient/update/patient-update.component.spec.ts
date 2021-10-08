@@ -13,6 +13,10 @@ import { INutritionState } from 'app/entities/nutrition-state/nutrition-state.mo
 import { NutritionStateService } from 'app/entities/nutrition-state/service/nutrition-state.service';
 import { IActivityLevel } from 'app/entities/activity-level/activity-level.model';
 import { ActivityLevelService } from 'app/entities/activity-level/service/activity-level.service';
+import { IDietNature } from 'app/entities/diet-nature/diet-nature.model';
+import { DietNatureService } from 'app/entities/diet-nature/service/diet-nature.service';
+import { ISupplements } from 'app/entities/supplements/supplements.model';
+import { SupplementsService } from 'app/entities/supplements/service/supplements.service';
 
 import { PatientUpdateComponent } from './patient-update.component';
 
@@ -24,6 +28,8 @@ describe('Component Tests', () => {
     let patientService: PatientService;
     let nutritionStateService: NutritionStateService;
     let activityLevelService: ActivityLevelService;
+    let dietNatureService: DietNatureService;
+    let supplementsService: SupplementsService;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -39,6 +45,8 @@ describe('Component Tests', () => {
       patientService = TestBed.inject(PatientService);
       nutritionStateService = TestBed.inject(NutritionStateService);
       activityLevelService = TestBed.inject(ActivityLevelService);
+      dietNatureService = TestBed.inject(DietNatureService);
+      supplementsService = TestBed.inject(SupplementsService);
 
       comp = fixture.componentInstance;
     });
@@ -88,12 +96,57 @@ describe('Component Tests', () => {
         expect(comp.activityLevelsSharedCollection).toEqual(expectedCollection);
       });
 
+      it('Should call DietNature query and add missing value', () => {
+        const patient: IPatient = { id: 'CBA' };
+        const dietNatures: IDietNature[] = [{ id: 'e7f6de64-712f-4674-8784-439361aa1550' }];
+        patient.dietNatures = dietNatures;
+
+        const dietNatureCollection: IDietNature[] = [{ id: '37c5cfb8-01f2-46d5-bb4c-855211594cda' }];
+        jest.spyOn(dietNatureService, 'query').mockReturnValue(of(new HttpResponse({ body: dietNatureCollection })));
+        const additionalDietNatures = [...dietNatures];
+        const expectedCollection: IDietNature[] = [...additionalDietNatures, ...dietNatureCollection];
+        jest.spyOn(dietNatureService, 'addDietNatureToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+        activatedRoute.data = of({ patient });
+        comp.ngOnInit();
+
+        expect(dietNatureService.query).toHaveBeenCalled();
+        expect(dietNatureService.addDietNatureToCollectionIfMissing).toHaveBeenCalledWith(dietNatureCollection, ...additionalDietNatures);
+        expect(comp.dietNaturesSharedCollection).toEqual(expectedCollection);
+      });
+
+      it('Should call Supplements query and add missing value', () => {
+        const patient: IPatient = { id: 'CBA' };
+        const supplements: ISupplements[] = [{ id: 'fd6f0bd0-bc7b-462b-b19e-0642aa71fa0e' }];
+        patient.supplements = supplements;
+
+        const supplementsCollection: ISupplements[] = [{ id: 'e663dd7b-7a42-40c8-8aef-1e14b5f813ff' }];
+        jest.spyOn(supplementsService, 'query').mockReturnValue(of(new HttpResponse({ body: supplementsCollection })));
+        const additionalSupplements = [...supplements];
+        const expectedCollection: ISupplements[] = [...additionalSupplements, ...supplementsCollection];
+        jest.spyOn(supplementsService, 'addSupplementsToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+        activatedRoute.data = of({ patient });
+        comp.ngOnInit();
+
+        expect(supplementsService.query).toHaveBeenCalled();
+        expect(supplementsService.addSupplementsToCollectionIfMissing).toHaveBeenCalledWith(
+          supplementsCollection,
+          ...additionalSupplements
+        );
+        expect(comp.supplementsSharedCollection).toEqual(expectedCollection);
+      });
+
       it('Should update editForm', () => {
         const patient: IPatient = { id: 'CBA' };
         const nutritionState: INutritionState = { id: '86be634f-4bcd-4e02-8cf4-f100e6dca7d2' };
         patient.nutritionState = nutritionState;
         const activityLevel: IActivityLevel = { id: '5ea13151-103b-48d4-81f3-aa58479eae2f' };
         patient.activityLevel = activityLevel;
+        const dietNatures: IDietNature = { id: '2f25d588-2401-4e1c-a356-a5ae855b52ed' };
+        patient.dietNatures = [dietNatures];
+        const supplements: ISupplements = { id: '69a891a7-ce34-4662-99d1-f06f1dea1d0c' };
+        patient.supplements = [supplements];
 
         activatedRoute.data = of({ patient });
         comp.ngOnInit();
@@ -101,6 +154,8 @@ describe('Component Tests', () => {
         expect(comp.editForm.value).toEqual(expect.objectContaining(patient));
         expect(comp.nutritionStatesSharedCollection).toContain(nutritionState);
         expect(comp.activityLevelsSharedCollection).toContain(activityLevel);
+        expect(comp.dietNaturesSharedCollection).toContain(dietNatures);
+        expect(comp.supplementsSharedCollection).toContain(supplements);
       });
     });
 
@@ -182,6 +237,76 @@ describe('Component Tests', () => {
           const entity = { id: 'ABC' };
           const trackResult = comp.trackActivityLevelById(0, entity);
           expect(trackResult).toEqual(entity.id);
+        });
+      });
+
+      describe('trackDietNatureById', () => {
+        it('Should return tracked DietNature primary key', () => {
+          const entity = { id: 'ABC' };
+          const trackResult = comp.trackDietNatureById(0, entity);
+          expect(trackResult).toEqual(entity.id);
+        });
+      });
+
+      describe('trackSupplementsById', () => {
+        it('Should return tracked Supplements primary key', () => {
+          const entity = { id: 'ABC' };
+          const trackResult = comp.trackSupplementsById(0, entity);
+          expect(trackResult).toEqual(entity.id);
+        });
+      });
+    });
+
+    describe('Getting selected relationships', () => {
+      describe('getSelectedDietNature', () => {
+        it('Should return option if no DietNature is selected', () => {
+          const option = { id: 'ABC' };
+          const result = comp.getSelectedDietNature(option);
+          expect(result === option).toEqual(true);
+        });
+
+        it('Should return selected DietNature for according option', () => {
+          const option = { id: 'ABC' };
+          const selected = { id: 'ABC' };
+          const selected2 = { id: 'CBA' };
+          const result = comp.getSelectedDietNature(option, [selected2, selected]);
+          expect(result === selected).toEqual(true);
+          expect(result === selected2).toEqual(false);
+          expect(result === option).toEqual(false);
+        });
+
+        it('Should return option if this DietNature is not selected', () => {
+          const option = { id: 'ABC' };
+          const selected = { id: 'CBA' };
+          const result = comp.getSelectedDietNature(option, [selected]);
+          expect(result === option).toEqual(true);
+          expect(result === selected).toEqual(false);
+        });
+      });
+
+      describe('getSelectedSupplements', () => {
+        it('Should return option if no Supplements is selected', () => {
+          const option = { id: 'ABC' };
+          const result = comp.getSelectedSupplements(option);
+          expect(result === option).toEqual(true);
+        });
+
+        it('Should return selected Supplements for according option', () => {
+          const option = { id: 'ABC' };
+          const selected = { id: 'ABC' };
+          const selected2 = { id: 'CBA' };
+          const result = comp.getSelectedSupplements(option, [selected2, selected]);
+          expect(result === selected).toEqual(true);
+          expect(result === selected2).toEqual(false);
+          expect(result === option).toEqual(false);
+        });
+
+        it('Should return option if this Supplements is not selected', () => {
+          const option = { id: 'ABC' };
+          const selected = { id: 'CBA' };
+          const result = comp.getSelectedSupplements(option, [selected]);
+          expect(result === option).toEqual(true);
+          expect(result === selected).toEqual(false);
         });
       });
     });

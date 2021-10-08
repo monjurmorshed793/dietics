@@ -19,6 +19,31 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'Patients' },
         loadChildren: () => import('./patient/patient.module').then(m => m.PatientModule),
       },
+      {
+        path: 'measurement-type',
+        data: { pageTitle: 'MeasurementTypes' },
+        loadChildren: () => import('./measurement-type/measurement-type.module').then(m => m.MeasurementTypeModule),
+      },
+      {
+        path: 'biochemical-test',
+        data: { pageTitle: 'BiochemicalTests' },
+        loadChildren: () => import('./biochemical-test/biochemical-test.module').then(m => m.BiochemicalTestModule),
+      },
+      {
+        path: 'patient-biochemical-test',
+        data: { pageTitle: 'PatientBiochemicalTests' },
+        loadChildren: () => import('./patient-biochemical-test/patient-biochemical-test.module').then(m => m.PatientBiochemicalTestModule),
+      },
+      {
+        path: 'supplements',
+        data: { pageTitle: 'Supplements' },
+        loadChildren: () => import('./supplements/supplements.module').then(m => m.SupplementsModule),
+      },
+      {
+        path: 'diet-nature',
+        data: { pageTitle: 'DietNatures' },
+        loadChildren: () => import('./diet-nature/diet-nature.module').then(m => m.DietNatureModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

@@ -14,6 +14,10 @@ import { INutritionState } from 'app/entities/nutrition-state/nutrition-state.mo
 import { NutritionStateService } from 'app/entities/nutrition-state/service/nutrition-state.service';
 import { IActivityLevel } from 'app/entities/activity-level/activity-level.model';
 import { ActivityLevelService } from 'app/entities/activity-level/service/activity-level.service';
+import { IDietNature } from 'app/entities/diet-nature/diet-nature.model';
+import { DietNatureService } from 'app/entities/diet-nature/service/diet-nature.service';
+import { ISupplements } from 'app/entities/supplements/supplements.model';
+import { SupplementsService } from 'app/entities/supplements/service/supplements.service';
 import { Gender } from 'app/entities/enumerations/gender.model';
 import { WeightType } from 'app/entities/enumerations/weight-type.model';
 import { HeightMeasureType } from 'app/entities/enumerations/height-measure-type.model';
@@ -32,6 +36,8 @@ export class PatientUpdateComponent implements OnInit {
 
   nutritionStatesSharedCollection: INutritionState[] = [];
   activityLevelsSharedCollection: IActivityLevel[] = [];
+  dietNaturesSharedCollection: IDietNature[] = [];
+  supplementsSharedCollection: ISupplements[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -58,6 +64,8 @@ export class PatientUpdateComponent implements OnInit {
     gainLossType: [],
     nutritionState: [],
     activityLevel: [],
+    dietNatures: [],
+    supplements: [],
   });
 
   constructor(
@@ -66,6 +74,8 @@ export class PatientUpdateComponent implements OnInit {
     protected patientService: PatientService,
     protected nutritionStateService: NutritionStateService,
     protected activityLevelService: ActivityLevelService,
+    protected dietNatureService: DietNatureService,
+    protected supplementsService: SupplementsService,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder
   ) {}
@@ -115,6 +125,36 @@ export class PatientUpdateComponent implements OnInit {
     return item.id!;
   }
 
+  trackDietNatureById(index: number, item: IDietNature): string {
+    return item.id!;
+  }
+
+  trackSupplementsById(index: number, item: ISupplements): string {
+    return item.id!;
+  }
+
+  getSelectedDietNature(option: IDietNature, selectedVals?: IDietNature[]): IDietNature {
+    if (selectedVals) {
+      for (const selectedVal of selectedVals) {
+        if (option.id === selectedVal.id) {
+          return selectedVal;
+        }
+      }
+    }
+    return option;
+  }
+
+  getSelectedSupplements(option: ISupplements, selectedVals?: ISupplements[]): ISupplements {
+    if (selectedVals) {
+      for (const selectedVal of selectedVals) {
+        if (option.id === selectedVal.id) {
+          return selectedVal;
+        }
+      }
+    }
+    return option;
+  }
+
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IPatient>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe(
       () => this.onSaveSuccess(),
@@ -160,6 +200,8 @@ export class PatientUpdateComponent implements OnInit {
       gainLossType: patient.gainLossType,
       nutritionState: patient.nutritionState,
       activityLevel: patient.activityLevel,
+      dietNatures: patient.dietNatures,
+      supplements: patient.supplements,
     });
 
     this.nutritionStatesSharedCollection = this.nutritionStateService.addNutritionStateToCollectionIfMissing(
@@ -169,6 +211,14 @@ export class PatientUpdateComponent implements OnInit {
     this.activityLevelsSharedCollection = this.activityLevelService.addActivityLevelToCollectionIfMissing(
       this.activityLevelsSharedCollection,
       patient.activityLevel
+    );
+    this.dietNaturesSharedCollection = this.dietNatureService.addDietNatureToCollectionIfMissing(
+      this.dietNaturesSharedCollection,
+      ...(patient.dietNatures ?? [])
+    );
+    this.supplementsSharedCollection = this.supplementsService.addSupplementsToCollectionIfMissing(
+      this.supplementsSharedCollection,
+      ...(patient.supplements ?? [])
     );
   }
 
@@ -192,6 +242,26 @@ export class PatientUpdateComponent implements OnInit {
         )
       )
       .subscribe((activityLevels: IActivityLevel[]) => (this.activityLevelsSharedCollection = activityLevels));
+
+    this.dietNatureService
+      .query()
+      .pipe(map((res: HttpResponse<IDietNature[]>) => res.body ?? []))
+      .pipe(
+        map((dietNatures: IDietNature[]) =>
+          this.dietNatureService.addDietNatureToCollectionIfMissing(dietNatures, ...(this.editForm.get('dietNatures')!.value ?? []))
+        )
+      )
+      .subscribe((dietNatures: IDietNature[]) => (this.dietNaturesSharedCollection = dietNatures));
+
+    this.supplementsService
+      .query()
+      .pipe(map((res: HttpResponse<ISupplements[]>) => res.body ?? []))
+      .pipe(
+        map((supplements: ISupplements[]) =>
+          this.supplementsService.addSupplementsToCollectionIfMissing(supplements, ...(this.editForm.get('supplements')!.value ?? []))
+        )
+      )
+      .subscribe((supplements: ISupplements[]) => (this.supplementsSharedCollection = supplements));
   }
 
   protected createFromForm(): IPatient {
@@ -221,6 +291,8 @@ export class PatientUpdateComponent implements OnInit {
       gainLossType: this.editForm.get(['gainLossType'])!.value,
       nutritionState: this.editForm.get(['nutritionState'])!.value,
       activityLevel: this.editForm.get(['activityLevel'])!.value,
+      dietNatures: this.editForm.get(['dietNatures'])!.value,
+      supplements: this.editForm.get(['supplements'])!.value,
     };
   }
 }

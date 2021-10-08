@@ -1,11 +1,14 @@
 package com.morshed.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.morshed.domain.enumeration.GainLossType;
 import com.morshed.domain.enumeration.Gender;
 import com.morshed.domain.enumeration.HeightMeasureType;
 import com.morshed.domain.enumeration.WeightType;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -92,6 +95,16 @@ public class Patient implements Serializable {
     @DBRef
     @Field("activityLevel")
     private ActivityLevel activityLevel;
+
+    @DBRef
+    @Field("dietNatures")
+    @JsonIgnoreProperties(value = { "patients" }, allowSetters = true)
+    private Set<DietNature> dietNatures = new HashSet<>();
+
+    @DBRef
+    @Field("supplements")
+    @JsonIgnoreProperties(value = { "patients" }, allowSetters = true)
+    private Set<Supplements> supplements = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -404,6 +417,56 @@ public class Patient implements Serializable {
 
     public Patient activityLevel(ActivityLevel activityLevel) {
         this.setActivityLevel(activityLevel);
+        return this;
+    }
+
+    public Set<DietNature> getDietNatures() {
+        return this.dietNatures;
+    }
+
+    public void setDietNatures(Set<DietNature> dietNatures) {
+        this.dietNatures = dietNatures;
+    }
+
+    public Patient dietNatures(Set<DietNature> dietNatures) {
+        this.setDietNatures(dietNatures);
+        return this;
+    }
+
+    public Patient addDietNatures(DietNature dietNature) {
+        this.dietNatures.add(dietNature);
+        dietNature.getPatients().add(this);
+        return this;
+    }
+
+    public Patient removeDietNatures(DietNature dietNature) {
+        this.dietNatures.remove(dietNature);
+        dietNature.getPatients().remove(this);
+        return this;
+    }
+
+    public Set<Supplements> getSupplements() {
+        return this.supplements;
+    }
+
+    public void setSupplements(Set<Supplements> supplements) {
+        this.supplements = supplements;
+    }
+
+    public Patient supplements(Set<Supplements> supplements) {
+        this.setSupplements(supplements);
+        return this;
+    }
+
+    public Patient addSupplements(Supplements supplements) {
+        this.supplements.add(supplements);
+        supplements.getPatients().add(this);
+        return this;
+    }
+
+    public Patient removeSupplements(Supplements supplements) {
+        this.supplements.remove(supplements);
+        supplements.getPatients().remove(this);
         return this;
     }
 

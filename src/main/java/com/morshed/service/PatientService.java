@@ -127,6 +127,15 @@ public class PatientService {
     }
 
     /**
+     * Get all the patients with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    public Flux<Patient> findAllWithEagerRelationships(Pageable pageable) {
+        return patientRepository.findAllWithEagerRelationships(pageable);
+    }
+
+    /**
      * Returns the number of patients available.
      * @return the number of entities in the database.
      *
@@ -143,7 +152,7 @@ public class PatientService {
      */
     public Mono<Patient> findOne(String id) {
         log.debug("Request to get Patient : {}", id);
-        return patientRepository.findById(id);
+        return patientRepository.findOneWithEagerRelationships(id);
     }
 
     /**

@@ -171,10 +171,15 @@ public class PatientResource {
      *
      * @param pageable the pagination information.
      * @param request a {@link ServerHttpRequest} request.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of patients in body.
      */
     @GetMapping("/patients")
-    public Mono<ResponseEntity<List<Patient>>> getAllPatients(Pageable pageable, ServerHttpRequest request) {
+    public Mono<ResponseEntity<List<Patient>>> getAllPatients(
+        Pageable pageable,
+        ServerHttpRequest request,
+        @RequestParam(required = false, defaultValue = "false") boolean eagerload
+    ) {
         log.debug("REST request to get a page of Patients");
         return patientService
             .countAll()

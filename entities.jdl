@@ -21,6 +21,27 @@ enum GainLossType{
     UNINTENTIONAL(Unintentional)
 }
 
+entity MeasurementType{
+    label String required,
+    description String
+}
+
+entity BiochemicalTest{
+    testName String,
+    //defaultMeasurementType measurementType,
+    description TextBlob
+}
+
+entity Supplements{
+    name String,
+    description TextBlob
+}
+
+entity DietNature{
+    name String,
+    description TextBlob
+}
+
 entity NutritionState{
     order Integer,
     label String required,
@@ -57,12 +78,29 @@ entity Patient{
     gainLossType GainLossType
 }
 
+entity PatientBiochemicalTest{
+    // patient
+    // BiochemicalTest
+    other String,
+    value Double
+    // MeasurementType
+    //
+}
+
 relationship ManyToOne{
     Patient{nutritionState(label)} to NutritionState,
-    Patient{activityLevel(label)} to ActivityLevel
+    Patient{activityLevel(label)} to ActivityLevel,
+    BiochemicalTest{defaultMeasurementType(label)} to  MeasurementType,
+    PatientBiochemicalTest{patient(name)} to Patient,
+    PatientBiochemicalTest{biochemicalTest(testName)} to BiochemicalTest,
+    PatientBiochemicalTest{measurementType(label)} to MeasurementType
+}
+
+relationship ManyToMany{
+    Patient{dietNatures(name)} to DietNature{patient(name)} ,
+    Patient{supplements(name)} to Supplements{patient(name)}
 }
 
 
 service * with serviceClass
-filter *
 paginate * with pagination

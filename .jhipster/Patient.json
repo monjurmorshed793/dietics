@@ -108,6 +108,22 @@
       "otherEntityRelationshipName": "patient",
       "relationshipName": "activityLevel",
       "otherEntityField": "label"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "dietNature",
+      "otherEntityRelationshipName": "patient",
+      "relationshipName": "dietNatures",
+      "otherEntityField": "name",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "supplements",
+      "otherEntityRelationshipName": "patient",
+      "relationshipName": "supplements",
+      "otherEntityField": "name",
+      "ownerSide": true
     }
   ],
   "entityTableName": "patient",

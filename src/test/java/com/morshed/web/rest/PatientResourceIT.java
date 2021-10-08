@@ -3,6 +3,7 @@ package com.morshed.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
 
 import com.morshed.IntegrationTest;
 import com.morshed.domain.Patient;
@@ -11,24 +12,34 @@ import com.morshed.domain.enumeration.Gender;
 import com.morshed.domain.enumeration.HeightMeasureType;
 import com.morshed.domain.enumeration.WeightType;
 import com.morshed.repository.PatientRepository;
+import com.morshed.service.PatientService;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.Base64Utils;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Integration tests for the {@link PatientResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureWebTestClient
 @WithMockUser
 class PatientResourceIT {
@@ -101,6 +112,12 @@ class PatientResourceIT {
 
     @Autowired
     private PatientRepository patientRepository;
+
+    @Mock
+    private PatientRepository patientRepositoryMock;
+
+    @Mock
+    private PatientService patientServiceMock;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -299,6 +316,24 @@ class PatientResourceIT {
             .value(hasItem(DEFAULT_GAIN_LOSS_TIME_FRAME.doubleValue()))
             .jsonPath("$.[*].gainLossType")
             .value(hasItem(DEFAULT_GAIN_LOSS_TYPE.toString()));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllPatientsWithEagerRelationshipsIsEnabled() {
+        when(patientServiceMock.findAllWithEagerRelationships(any())).thenReturn(Flux.empty());
+
+        webTestClient.get().uri(ENTITY_API_URL + "?eagerload=true").exchange().expectStatus().isOk();
+
+        verify(patientServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllPatientsWithEagerRelationshipsIsNotEnabled() {
+        when(patientServiceMock.findAllWithEagerRelationships(any())).thenReturn(Flux.empty());
+
+        webTestClient.get().uri(ENTITY_API_URL + "?eagerload=true").exchange().expectStatus().isOk();
+
+        verify(patientServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
