@@ -1,0 +1,71 @@
+enum Gender{
+    MALE(Male),
+    FEMALE(Female)
+}
+
+enum HeightMeasureType{
+    CM(cm),
+    INCH(inch),
+    FEET(ft)
+}
+
+enum WeightType{
+    UNDERWEIGHT(Underweight),
+    NORMAL(Normal),
+    OVERWEIGHT(Overweight),
+    OBESE(Obese)
+}
+
+enum GainLossType{
+    INTENTIONAL(Intentional)
+    UNINTENTIONAL(Unintentional)
+}
+
+@EntityPackage(config)
+entity NutritionState{
+    order Integer,
+    label String required,
+    note TextBlob
+}
+
+@EntityPackage(config)
+entity ActivityLevel{
+    order Integer,
+    label String required,
+    note TextBlob
+}
+
+@EntityPackage(patient)
+entity Patient{
+    name String,
+    address TextBlob,
+    hospital String,
+    admissionDate LocalDate,
+    reasonOfAdmission TextBlob,
+    wordNo String,
+    bedNo String,
+    healthCondition TextBlob,
+    mentalStatus TextBlob,
+    age Integer,
+    sex Gender,
+    weight Double,
+    weightType WeightType,
+    height Double,
+    heightMeasureType HeightMeasureType,
+    ibw Double,
+    bmi Double,
+    recentWeightGainLoss Boolean,
+    gainLossMeasure Double,
+    gainLossTimeFrame Double,
+    gainLossType GainLossType
+}
+
+relationship ManyToOne{
+    Patient{nutritionState(label)} to NutritionState,
+    Patient{activityLevel(label)} to ActivityLevel
+}
+
+
+service * with serviceClass
+filter *
+paginate * with pagination
