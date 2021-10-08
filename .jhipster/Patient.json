@@ -1,0 +1,123 @@
+{
+  "name": "Patient",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "address",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "hospital",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "admissionDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "reasonOfAdmission",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "wordNo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "bedNo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "healthCondition",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "mentalStatus",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "age",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "sex",
+      "fieldType": "Gender",
+      "fieldValues": "MALE (Male),FEMALE (Female)"
+    },
+    {
+      "fieldName": "weight",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "weightType",
+      "fieldType": "WeightType",
+      "fieldValues": "UNDERWEIGHT (Underweight),NORMAL (Normal),OVERWEIGHT (Overweight),OBESE (Obese)"
+    },
+    {
+      "fieldName": "height",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "heightMeasureType",
+      "fieldType": "HeightMeasureType",
+      "fieldValues": "CM (cm),INCH (inch),FEET (ft)"
+    },
+    {
+      "fieldName": "ibw",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "bmi",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "recentWeightGainLoss",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "gainLossMeasure",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "gainLossTimeFrame",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "gainLossType",
+      "fieldType": "GainLossType",
+      "fieldValues": "INTENTIONAL (Intentional),UNINTENTIONAL (Unintentional)"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "nutritionState",
+      "otherEntityRelationshipName": "patient",
+      "relationshipName": "nutritionState",
+      "otherEntityField": "label"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "activityLevel",
+      "otherEntityRelationshipName": "patient",
+      "relationshipName": "activityLevel",
+      "otherEntityField": "label"
+    }
+  ],
+  "entityTableName": "patient",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20211008200932"
+}

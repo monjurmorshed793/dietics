@@ -21,21 +21,18 @@ enum GainLossType{
     UNINTENTIONAL(Unintentional)
 }
 
-@EntityPackage(config)
 entity NutritionState{
     order Integer,
     label String required,
     note TextBlob
 }
 
-@EntityPackage(config)
 entity ActivityLevel{
     order Integer,
     label String required,
     note TextBlob
 }
 
-@EntityPackage(patient)
 entity Patient{
     name String,
     address TextBlob,

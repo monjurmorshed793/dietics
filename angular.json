@@ -108,6 +108,7 @@
   },
   "defaultProject": "dietics",
   "cli": {
+    "analytics": false,
     "packageManager": "npm"
   }
 }

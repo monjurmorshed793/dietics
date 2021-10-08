@@ -1,0 +1,124 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="patient">
+      <h2 data-cy="patientDetailsHeading"><span>Patient</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ patient.id }}</span>
+        </dd>
+        <dt><span>Name</span></dt>
+        <dd>
+          <span>{{ patient.name }}</span>
+        </dd>
+        <dt><span>Address</span></dt>
+        <dd>
+          <span>{{ patient.address }}</span>
+        </dd>
+        <dt><span>Hospital</span></dt>
+        <dd>
+          <span>{{ patient.hospital }}</span>
+        </dd>
+        <dt><span>Admission Date</span></dt>
+        <dd>
+          <span>{{ patient.admissionDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span>Reason Of Admission</span></dt>
+        <dd>
+          <span>{{ patient.reasonOfAdmission }}</span>
+        </dd>
+        <dt><span>Word No</span></dt>
+        <dd>
+          <span>{{ patient.wordNo }}</span>
+        </dd>
+        <dt><span>Bed No</span></dt>
+        <dd>
+          <span>{{ patient.bedNo }}</span>
+        </dd>
+        <dt><span>Health Condition</span></dt>
+        <dd>
+          <span>{{ patient.healthCondition }}</span>
+        </dd>
+        <dt><span>Mental Status</span></dt>
+        <dd>
+          <span>{{ patient.mentalStatus }}</span>
+        </dd>
+        <dt><span>Age</span></dt>
+        <dd>
+          <span>{{ patient.age }}</span>
+        </dd>
+        <dt><span>Sex</span></dt>
+        <dd>
+          <span>{{ patient.sex }}</span>
+        </dd>
+        <dt><span>Weight</span></dt>
+        <dd>
+          <span>{{ patient.weight }}</span>
+        </dd>
+        <dt><span>Weight Type</span></dt>
+        <dd>
+          <span>{{ patient.weightType }}</span>
+        </dd>
+        <dt><span>Height</span></dt>
+        <dd>
+          <span>{{ patient.height }}</span>
+        </dd>
+        <dt><span>Height Measure Type</span></dt>
+        <dd>
+          <span>{{ patient.heightMeasureType }}</span>
+        </dd>
+        <dt><span>Ibw</span></dt>
+        <dd>
+          <span>{{ patient.ibw }}</span>
+        </dd>
+        <dt><span>Bmi</span></dt>
+        <dd>
+          <span>{{ patient.bmi }}</span>
+        </dd>
+        <dt><span>Recent Weight Gain Loss</span></dt>
+        <dd>
+          <span>{{ patient.recentWeightGainLoss }}</span>
+        </dd>
+        <dt><span>Gain Loss Measure</span></dt>
+        <dd>
+          <span>{{ patient.gainLossMeasure }}</span>
+        </dd>
+        <dt><span>Gain Loss Time Frame</span></dt>
+        <dd>
+          <span>{{ patient.gainLossTimeFrame }}</span>
+        </dd>
+        <dt><span>Gain Loss Type</span></dt>
+        <dd>
+          <span>{{ patient.gainLossType }}</span>
+        </dd>
+        <dt><span>Nutrition State</span></dt>
+        <dd>
+          <div *ngIf="patient.nutritionState">
+            <a [routerLink]="['/nutrition-state', patient.nutritionState?.id, 'view']">{{ patient.nutritionState?.label }}</a>
+          </div>
+        </dd>
+        <dt><span>Activity Level</span></dt>
+        <dd>
+          <div *ngIf="patient.activityLevel">
+            <a [routerLink]="['/activity-level', patient.activityLevel?.id, 'view']">{{ patient.activityLevel?.label }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/patient', patient.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
